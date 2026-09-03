@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Social-Media-Studio.csproj" />
+  <Project Path="Social-Media-Studio.Tests/Social-Media-Studio.Tests.csproj" />
+</Solution>

@@ -1,0 +1,15 @@
+## Visual Studio / .NET ignores
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+
+## Environment & Secrets
+.env
+.env.local
+*.secret
+appsettings.json
+!appsettings.example.json

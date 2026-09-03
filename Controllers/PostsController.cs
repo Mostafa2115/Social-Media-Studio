@@ -19,9 +19,7 @@ public class PostsController : ControllerBase
         _variantService = variantService;
     }
 
-    /// <summary>
-    /// Ingest a blog post as raw text/markdown or from a URL
-    /// </summary>
+    
     [HttpPost]
     public async Task<ActionResult<BlogPostResponse>> IngestPost([FromBody] IngestPostRequest request)
     {
@@ -36,9 +34,7 @@ public class PostsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get all ingested blog posts
-    /// </summary>
+    
     [HttpGet]
     public async Task<ActionResult<List<BlogPostResponse>>> GetAllPosts()
     {
@@ -46,9 +42,7 @@ public class PostsController : ControllerBase
         return Ok(posts.Select(MapToResponse).ToList());
     }
 
-    /// <summary>
-    /// Get a blog post by ID
-    /// </summary>
+    
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<BlogPostResponse>> GetPostById(Guid id)
     {
@@ -60,9 +54,7 @@ public class PostsController : ControllerBase
         return Ok(MapToResponse(post));
     }
 
-    /// <summary>
-    /// Generate platform variants (X, LinkedIn, Telegram) for a blog post
-    /// </summary>
+    
     [HttpPost("{id:guid}/generate-variants")]
     public async Task<ActionResult<List<PostVariantResponse>>> GenerateVariants(Guid id)
     {
@@ -87,9 +79,6 @@ public class PostsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Create a custom platform variant with constraint enforcement
-    /// </summary>
     [HttpPost("{id:guid}/variants")]
     public async Task<ActionResult<PostVariantResponse>> CreateCustomVariant(Guid id, [FromBody] CreateCustomVariantRequest request)
     {
@@ -114,9 +103,6 @@ public class PostsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Get all variants for a specific blog post
-    /// </summary>
     [HttpGet("{id:guid}/variants")]
     public async Task<ActionResult<List<PostVariantResponse>>> GetVariantsForPost(Guid id)
     {

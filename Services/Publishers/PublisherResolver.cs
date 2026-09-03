@@ -25,7 +25,6 @@ public class PublisherResolver : IPublisherResolver
 
     public ISocialPublisher GetPublisher(string platform)
     {
-        // 1. Check if there is a global adapter override in configuration (e.g. for testing / Probe 6)
         var globalOverride = _configuration["Publishers:GlobalOverride"];
         if (!string.IsNullOrWhiteSpace(globalOverride))
         {
@@ -40,7 +39,6 @@ public class PublisherResolver : IPublisherResolver
             }
         }
 
-        // 2. Check platform-specific configuration mapping: e.g. "Publishers:Telegram" = "mock_x"
         var mappedTarget = _configuration[$"Publishers:{platform}"];
         var targetToLookup = !string.IsNullOrWhiteSpace(mappedTarget) ? mappedTarget : platform;
         var cleanTarget = targetToLookup.Replace("_", "").Trim();
@@ -53,7 +51,6 @@ public class PublisherResolver : IPublisherResolver
 
         if (publisher == null)
         {
-            // Fallback to matching by platform name directly
             publisher = _publishers.FirstOrDefault(p => p.PlatformName.Equals(platform, StringComparison.OrdinalIgnoreCase));
         }
 

@@ -8,10 +8,6 @@ public class ScheduleSlot
 
     public DateTime ScheduledTimeUtc { get; set; }
     public SlotStatus Status { get; set; } = SlotStatus.Pending;
-
-    /// <summary>
-    /// Unique idempotency key computed per variant and slot (e.g. variantId_slotTimestamp)
-    /// </summary>
     public string IdempotencyKey { get; set; } = string.Empty;
 
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;

@@ -33,10 +33,8 @@ public class VariantService : IVariantService
 
         foreach (var platform in platforms)
         {
-            // Compose content based on platform voice & rules
             string content = ComposePlatformContent(platform, post.Title, post.Content, post.SourceUrl);
 
-            // Validate against constraint profile
             var validation = _validator.Validate(platform, content);
             if (!validation.IsValid)
             {
@@ -73,7 +71,6 @@ public class VariantService : IVariantService
             throw new KeyNotFoundException($"BlogPost with Id '{blogPostId}' not found.");
         }
 
-        // Validate constraint profile before creating
         var validation = _validator.Validate(request.Platform, request.Content);
         if (!validation.IsValid)
         {
@@ -116,7 +113,6 @@ public class VariantService : IVariantService
 
     private string ComposePlatformContent(string platform, string title, string rawContent, string? sourceUrl)
     {
-        // Clean summary (first ~150-200 chars)
         var summary = rawContent.Length > 200 ? rawContent[..200].Trim() + "..." : rawContent.Trim();
 
         return platform.ToLowerInvariant() switch
@@ -130,7 +126,6 @@ public class VariantService : IVariantService
 
     private static string ComposeXPost(string title, string summary, string? sourceUrl)
     {
-        // Max 280 chars, 1-3 hashtags, punchy
         var text = $"🚀 {title}\n\n{summary}";
         var tags = "\n\n#Tech #Update";
         var maxAllowedTextLen = 280 - tags.Length;
@@ -143,7 +138,6 @@ public class VariantService : IVariantService
 
     private static string ComposeLinkedInPost(string title, string rawContent, string? sourceUrl)
     {
-        // Professional, key insights, 2-5 hashtags
         var snippet = rawContent.Length > 400 ? rawContent[..400].Trim() + "..." : rawContent.Trim();
         var urlLine = !string.IsNullOrWhiteSpace(sourceUrl) ? $"\n\nRead the full post here: {sourceUrl}" : "";
         return $"📌 {title}\n\nKey Takeaways & Insights:\n{snippet}{urlLine}\n\nWhat are your thoughts on this?\n\n#SoftwareEngineering #Backend #TechLeadership";
@@ -151,7 +145,6 @@ public class VariantService : IVariantService
 
     private static string ComposeTelegramPost(string title, string summary, string? sourceUrl)
     {
-        // Informative, markdown formatted, clear call to action
         var urlLine = !string.IsNullOrWhiteSpace(sourceUrl) ? $"\n🔗 [Read More]({sourceUrl})" : "";
         return $"📢 *{title}*\n\n{summary}{urlLine}\n\n#Engineering #Newsletter";
     }

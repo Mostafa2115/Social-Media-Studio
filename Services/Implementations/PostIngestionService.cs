@@ -26,7 +26,6 @@ public class PostIngestionService : IPostIngestionService
         string content = request.Content ?? string.Empty;
         string? sourceUrl = request.Url;
 
-        // If URL provided but no content, fetch from URL
         if (!string.IsNullOrWhiteSpace(sourceUrl) && string.IsNullOrWhiteSpace(content))
         {
             _logger.LogInformation("Fetching blog post content from URL: {Url}", sourceUrl);
@@ -34,7 +33,6 @@ public class PostIngestionService : IPostIngestionService
             {
                 var html = await _httpClient.GetStringAsync(sourceUrl, cancellationToken);
                 
-                // Extract Title if not provided
                 if (string.IsNullOrWhiteSpace(request.Title))
                 {
                     var titleMatch = Regex.Match(html, @"<title>\s*(.+?)\s*</title>", RegexOptions.IgnoreCase);
@@ -44,7 +42,6 @@ public class PostIngestionService : IPostIngestionService
                     }
                 }
 
-                // Strip basic HTML tags for clean text
                 content = Regex.Replace(html, @"<script[^>]*>[\s\S]*?</script>", "", RegexOptions.IgnoreCase);
                 content = Regex.Replace(content, @"<style[^>]*>[\s\S]*?</style>", "", RegexOptions.IgnoreCase);
                 content = Regex.Replace(content, @"<[^>]+>", " ").Trim();

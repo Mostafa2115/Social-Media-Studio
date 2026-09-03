@@ -24,9 +24,6 @@ public class VariantsController : ControllerBase
         _schedulingService = schedulingService;
     }
 
-    /// <summary>
-    /// Get variant details by ID
-    /// </summary>
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<PostVariantResponse>> GetVariantById(Guid id)
     {
@@ -38,9 +35,6 @@ public class VariantsController : ControllerBase
         return Ok(MapToVariantResponse(variant));
     }
 
-    /// <summary>
-    /// Approve a variant for publishing
-    /// </summary>
     [HttpPost("{id:guid}/approve")]
     public async Task<ActionResult<PostVariantResponse>> ApproveVariant(Guid id)
     {
@@ -59,9 +53,6 @@ public class VariantsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Reject a variant with a reason
-    /// </summary>
     [HttpPost("{id:guid}/reject")]
     public async Task<ActionResult<PostVariantResponse>> RejectVariant(Guid id, [FromBody] RejectVariantRequest request)
     {
@@ -80,9 +71,6 @@ public class VariantsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Edit variant content (re-checks constraint profile)
-    /// </summary>
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<PostVariantResponse>> EditVariant(Guid id, [FromBody] EditVariantRequest request)
     {
@@ -111,9 +99,6 @@ public class VariantsController : ControllerBase
         }
     }
 
-    /// <summary>
-    /// Schedule an approved variant. Rejects unapproved variants with 4xx error.
-    /// </summary>
     [HttpPost("{id:guid}/schedule")]
     public async Task<ActionResult<ScheduleSlotResponse>> ScheduleVariant(Guid id, [FromBody] ScheduleVariantRequest? request)
     {
@@ -128,7 +113,6 @@ public class VariantsController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            // Fulfills Probe 3: Returns 4xx with clear error message when variant is not approved
             return BadRequest(new { error = ex.Message });
         }
     }

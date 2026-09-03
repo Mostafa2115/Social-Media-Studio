@@ -30,7 +30,6 @@ public class ConstraintValidator : IConstraintValidator
             return ValidationResult.Fail("ContentEmpty", "Post content cannot be empty.");
         }
 
-        // 1. Check Max Length
         if (content.Length > profile.MaxLength)
         {
             return ValidationResult.Fail(
@@ -39,7 +38,6 @@ public class ConstraintValidator : IConstraintValidator
             );
         }
 
-        // 2. Check Min Length
         if (content.Length < profile.MinLength)
         {
             return ValidationResult.Fail(
@@ -48,7 +46,6 @@ public class ConstraintValidator : IConstraintValidator
             );
         }
 
-        // 3. Check Hashtags Count
         var hashtags = HashtagRegex.Matches(content);
         if (hashtags.Count < profile.MinHashtags)
         {
@@ -66,7 +63,6 @@ public class ConstraintValidator : IConstraintValidator
             );
         }
 
-        // 4. Check Prohibited Words
         foreach (var word in profile.ProhibitedWords)
         {
             if (content.Contains(word, StringComparison.OrdinalIgnoreCase))

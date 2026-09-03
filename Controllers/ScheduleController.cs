@@ -16,9 +16,6 @@ public class ScheduleController : ControllerBase
         _schedulingService = schedulingService;
     }
 
-    /// <summary>
-    /// List all scheduled slots
-    /// </summary>
     [HttpGet("slots")]
     public async Task<ActionResult<List<ScheduleSlotResponse>>> GetAllSlots()
     {
@@ -26,9 +23,6 @@ public class ScheduleController : ControllerBase
         return Ok(slots.Select(MapToSlotResponse).ToList());
     }
 
-    /// <summary>
-    /// Get details of a single scheduled slot
-    /// </summary>
     [HttpGet("slots/{id:guid}")]
     public async Task<ActionResult<ScheduleSlotResponse>> GetSlotById(Guid id)
     {
@@ -40,9 +34,6 @@ public class ScheduleController : ControllerBase
         return Ok(MapToSlotResponse(slot));
     }
 
-    /// <summary>
-    /// Manually trigger processing of due slots (useful for immediate execution & testing)
-    /// </summary>
     [HttpPost("process-due")]
     public async Task<ActionResult> ProcessDueSlots()
     {

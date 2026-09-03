@@ -76,7 +76,6 @@ public class ReviewWorkflowService : IReviewWorkflowService
             throw new InvalidOperationException("Cannot edit an already published variant.");
         }
 
-        // Validate modified content against platform constraints
         var validation = _validator.Validate(variant.Platform, request.Content);
         if (!validation.IsValid)
         {
@@ -86,7 +85,6 @@ public class ReviewWorkflowService : IReviewWorkflowService
         }
 
         variant.Content = request.Content;
-        // After editing, status returns to Draft so it must be reviewed again
         variant.Status = VariantStatus.Draft;
         variant.RejectionReason = null;
         variant.UpdatedAtUtc = DateTime.UtcNow;

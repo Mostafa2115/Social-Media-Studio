@@ -16,9 +16,6 @@ public class HistoryController : ControllerBase
         _schedulingService = schedulingService;
     }
 
-    /// <summary>
-    /// View full publish attempts history
-    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<PublishAttemptResponse>>> GetHistory()
     {

@@ -31,7 +31,6 @@ public class SchedulingService : ISchedulingService
             throw new KeyNotFoundException($"PostVariant with Id '{variantId}' not found.");
         }
 
-        // Enforcement: ONLY Approved variants can be scheduled (Probe 3)
         if (variant.Status != VariantStatus.Approved)
         {
             _logger.LogWarning("Refused scheduling for variant {Id} with status {Status}", variant.Id, variant.Status);
@@ -39,10 +38,8 @@ public class SchedulingService : ISchedulingService
         }
 
         var scheduledTime = request.ScheduledTimeUtc ?? DateTime.UtcNow;
-        // Compute deterministic idempotency key for this variant and slot
         var idempotencyKey = $"var_{variant.Id}_{scheduledTime:yyyyMMddHHmmss}";
 
-        // Check if slot already exists with this idempotency key (Idempotent scheduling)
         var existingSlot = await _dbContext.ScheduleSlots
             .Include(s => s.PostVariant)
             .FirstOrDefaultAsync(s => s.IdempotencyKey == idempotencyKey, cancellationToken);
@@ -101,7 +98,6 @@ public class SchedulingService : ISchedulingService
     {
         var now = DateTime.UtcNow;
 
-        // Fetch slots that are due: Pending or previously crashed mid-batch Processing
         var dueSlots = await _dbContext.ScheduleSlots
             .Include(s => s.PostVariant)
             .Include(s => s.PublishAttempts)
@@ -117,8 +113,6 @@ public class SchedulingService : ISchedulingService
                 continue;
             }
 
-            // CRITICAL IDEMPOTENCY CHECK:
-            // Check if there is ALREADY a successful publish attempt for this slot
             var existingSuccess = slot.PublishAttempts.FirstOrDefault(a => a.IsSuccess);
             if (existingSuccess != null)
             {
@@ -129,11 +123,9 @@ public class SchedulingService : ISchedulingService
                 continue;
             }
 
-            // Mark slot as Processing
             slot.Status = SlotStatus.Processing;
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            // Resolve publisher adapter (can be swapped in configuration)
             var publisher = _publisherResolver.GetPublisher(slot.PostVariant.Platform);
 
             var publishRequest = new PublishRequest
@@ -156,7 +148,6 @@ public class SchedulingService : ISchedulingService
                 result = PublishResult.Failed($"Unexpected error: {ex.Message}");
             }
 
-            // Record PublishAttempt in history
             var attempt = new PublishAttempt
             {
                 Id = Guid.NewGuid(),

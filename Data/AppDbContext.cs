@@ -18,7 +18,6 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // BlogPost configuration
         modelBuilder.Entity<BlogPost>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -30,7 +29,6 @@ public class AppDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // PostVariant configuration
         modelBuilder.Entity<PostVariant>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -43,7 +41,6 @@ public class AppDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // ScheduleSlot configuration
         modelBuilder.Entity<ScheduleSlot>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -57,7 +54,6 @@ public class AppDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        // PublishAttempt configuration
         modelBuilder.Entity<PublishAttempt>(entity =>
         {
             entity.HasKey(e => e.Id);

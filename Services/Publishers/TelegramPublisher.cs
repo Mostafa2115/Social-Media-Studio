@@ -62,7 +62,6 @@ public class TelegramPublisher : ISocialPublisher
                 messageId = msgIdElement.GetInt64();
             }
 
-            // If public channel with username e.g. @mychannel -> https://t.me/mychannel/123
             var channelUsername = chatId.TrimStart('@');
             var messageUrl = chatId.StartsWith("@")
                 ? $"https://t.me/{channelUsername}/{messageId}"
